@@ -19,15 +19,20 @@ app.use("/api/items", itemRoutes);
 
 const PORT = process.env.PORT || 5000;
 
-mongoose
-  .connect(process.env.MONGO_URI)
-  .then(() => {
+const start = async () => {
+  try {
+    await mongoose.connect(process.env.MONGO_URI);
+    app.locals.dbConnected = true;
     console.log("MongoDB connected");
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
-  })
-  .catch((error) => {
+  } catch (error) {
+    app.locals.dbConnected = false;
     console.error("Database connection error:", error.message);
-    process.exit(1);
+    console.error("Continuing to start the server without a database connection. API endpoints will return 503.");
+  }
+
+  app.listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
   });
+};
+
+start();

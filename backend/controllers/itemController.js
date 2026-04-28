@@ -1,6 +1,9 @@
 import Item from "../models/Item.js";
 
 export const getItems = async (req, res) => {
+  if (!req.app?.locals?.dbConnected) {
+    return res.status(503).json({ message: "Database not connected" });
+  }
   try {
     const items = await Item.find().sort({ createdAt: -1 });
     res.status(200).json(items);
@@ -10,6 +13,9 @@ export const getItems = async (req, res) => {
 };
 
 export const getItemById = async (req, res) => {
+  if (!req.app?.locals?.dbConnected) {
+    return res.status(503).json({ message: "Database not connected" });
+  }
   try {
     const item = await Item.findById(req.params.id);
 
@@ -24,6 +30,9 @@ export const getItemById = async (req, res) => {
 };
 
 export const createItem = async (req, res) => {
+  if (!req.app?.locals?.dbConnected) {
+    return res.status(503).json({ message: "Database not connected" });
+  }
   try {
     const newItem = await Item.create(req.body);
     res.status(201).json(newItem);
@@ -36,6 +45,9 @@ export const createItem = async (req, res) => {
 };
 
 export const updateItem = async (req, res) => {
+  if (!req.app?.locals?.dbConnected) {
+    return res.status(503).json({ message: "Database not connected" });
+  }
   try {
     const updatedItem = await Item.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
@@ -56,6 +68,9 @@ export const updateItem = async (req, res) => {
 };
 
 export const deleteItem = async (req, res) => {
+  if (!req.app?.locals?.dbConnected) {
+    return res.status(503).json({ message: "Database not connected" });
+  }
   try {
     const deletedItem = await Item.findByIdAndDelete(req.params.id);
 
